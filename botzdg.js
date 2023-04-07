@@ -110,7 +110,6 @@ app.post('/message', [
   const numberUser = number.substr(-8, 8);
   const message = req.body.message;
 
-  if (numberDDI !== "55") {
     const numberZDG = number + "@c.us";
     client.sendMessage(numberZDG, message).then(response => {
     res.status(200).json({
@@ -124,40 +123,9 @@ app.post('/message', [
       message: 'Mensagem não enviada',
       response: err.text
     });
+    console.log(err);
     });
-  }
-  else if (numberDDI === "55" && parseInt(numberDDD) <= 30) {
-    const numberZDG = "55" + numberDDD + "9" + numberUser + "@c.us";
-    client.sendMessage(numberZDG, message).then(response => {
-    res.status(200).json({
-      status: true,
-      message: 'Mensagem enviada',
-      response: response
-    });
-    }).catch(err => {
-    res.status(500).json({
-      status: false,
-      message: 'Mensagem não enviada',
-      response: err.text
-    });
-    });
-  }
-  else if (numberDDI === "55" && parseInt(numberDDD) > 30) {
-    const numberZDG = "55" + numberDDD + numberUser + "@c.us";
-    client.sendMessage(numberZDG, message).then(response => {
-    res.status(200).json({
-      status: true,
-      message: 'Mensagem enviada',
-      response: response
-    });
-    }).catch(err => {
-    res.status(500).json({
-      status: false,
-      message: 'Mensagem não enviada',
-      response: err.text
-    });
-    });
-  }
+ 
 });
 
 
