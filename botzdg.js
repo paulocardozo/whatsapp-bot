@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 const client = new Client({
   authStrategy: new LocalAuth({ clientId: 'bot-zdg' }),
-  puppeteer: { headless: true,
+  puppeteer: {
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -39,7 +39,7 @@ const client = new Client({
       '--no-zygote',
       '--single-process', // <- this one doesn't works in Windows
       '--disable-gpu'
-    ] }
+    ] }  
 });
 
 client.initialize();
@@ -104,27 +104,30 @@ app.post('/message', [
     });
   }
 
-  const number = req.body.number;
-  const numberDDI = number.substr(0, 2);
-  const numberDDD = number.substr(2, 2);
-  const numberUser = number.substr(-8, 8);
-  const message = req.body.message;
+  if (client.info === undefined){
+    console.log('the system is not ready yet');
+  } else {
 
-    const numberZDG = number + "@c.us";
-    client.sendMessage(numberZDG, message).then(response => {
-    res.status(200).json({
-      status: true,
-      message: 'Mensagem enviada',
-      response: response
-    });
-    }).catch(err => {
-    res.status(500).json({
-      status: false,
-      message: 'Mensagem não enviada',
-      response: err.text
-    });
-    console.log(err);
-    });
+    const number = req.body.number;
+    const message = req.body.message;
+  
+      const numberZDG = number + "@c.us";
+      client.sendMessage(numberZDG, message).then(response => {
+      res.status(200).json({
+        status: true,
+        message: 'Mensagem enviada',
+        response: response
+      });
+      }).catch(err => {
+      res.status(500).json({
+        status: false,
+        message: 'Mensagem não enviada',
+        response: err.text
+      });
+      console.log(err);
+      });
+
+  }
  
 });
 
