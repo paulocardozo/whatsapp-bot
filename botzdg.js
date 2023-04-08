@@ -110,22 +110,43 @@ app.post('/message', [
 
     const number = req.body.number;
     const message = req.body.message;
+
+    if (number.length > 15) {
+      return res.status(400).json({
+        status: false,
+        message: 'Número muito extenso'
+      });
+    }
   
       const numberZDG = number + "@c.us";
-      client.sendMessage(numberZDG, message).then(response => {
-      res.status(200).json({
-        status: true,
-        message: 'Mensagem enviada',
-        response: response
-      });
-      }).catch(err => {
-      res.status(500).json({
-        status: false,
-        message: 'Mensagem não enviada',
-        response: err.text
-      });
-      console.log(err);
-      });
+
+      const exists = await client.isRegisteredUser(numberZDG)
+
+      if (exists) {
+
+        client.sendMessage(numberZDG, message).then(response => {
+          res.status(200).json({
+            status: true,
+            message: 'Mensagem enviada',
+            response: response
+          });
+          }).catch(err => {
+          res.status(500).json({
+            status: false,
+            message: 'Mensagem não enviada',
+            response: err
+          });
+          console.log(err);
+          });
+
+      } else {
+
+        res.status(404).json({
+          status: false,
+          message: 'Número não existe'
+        });
+
+      }
 
   }
  
