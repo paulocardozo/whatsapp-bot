@@ -238,11 +238,6 @@ app.post('/media', [
     });
   }
 });
-
-
-client.on('message', message => {
-	console.log(message.body);
-});
     
 server.listen(port, function() {
         console.log('App running on *: ' + port);
